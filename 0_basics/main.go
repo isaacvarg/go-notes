@@ -42,4 +42,12 @@ func main() {
 	n, err := fmt.Scan(&greeting)
 	fmt.Print(n, err)
 	fmt.Println(greeting)
+
+	// other ways of formattings string
+	fmt.Printf("First name is %v\nlast name %v", first, last)
+
+	// there are a bunch of cool built in formatters for Printf
+	// in this case the pi value is showing only 4 digits after decimal
+	yum := math.Pi
+	fmt.Printf("\nShowing only significant digits %.4f \n", yum)
 }

@@ -50,4 +50,13 @@ func main() {
 	// in this case the pi value is showing only 4 digits after decimal
 	yum := math.Pi
 	fmt.Printf("\nShowing only significant digits %.4f \n", yum)
+
+	// you can also store the formatted strings ahead of time and print later
+	textA := fmt.Sprintf("hey %v, \n", first)
+	textB := fmt.Sprintf("pi is equal to %.6f \n", yum)
+	fmt.Print(textA, textB)
+
+	// can also use backticks `` for multi-line string
+	// similar to typescript
+	// \n is no longer needed
 }

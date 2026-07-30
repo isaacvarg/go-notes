@@ -30,22 +30,15 @@ func readFromFile() (float64, error) {
 	data, err := os.ReadFile(fileName)
 	// nil in go is special valure that means absense of useful value
 	if err != nil {
-		return 0, errors.New("Failed to find file.")
+		return 0, errors.New("failed to find file")
 	}
 
 	valueText := string(data)
 	value, err := strconv.ParseFloat(valueText, 64)
 	if err != nil {
-		return 0, errors.New("Failed to convert value")
+		return 0, errors.New("failed to convert value")
 	}
 	return value, nil
-}
-
-func writeToFile(currentNumber float64) {
-	// helps convert this to a formatted string which
-	// can then be converted to bytes using []byte()
-	convertedBytes := fmt.Sprint(currentNumber)
-	os.WriteFile(fileName, []byte(convertedBytes), 0644)
 }
 
 func main() {

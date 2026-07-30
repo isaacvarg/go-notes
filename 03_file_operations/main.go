@@ -31,22 +31,25 @@ func main() {
 
 	for {
 
-		fmt.Println("1 to add 10")
+		fmt.Println("1 to add 10: ")
 
-		fmt.Println("2 to read number")
+		fmt.Println("2 to read number: ")
 
 		var choice int
 
-		fmt.Print("What we do?")
+		fmt.Print("What we do?: ")
 		fmt.Scan(&choice)
 
 		switch choice {
 		case 1:
-
-			fmt.Println("hello")
+			currentNumber += 10
+			writeToFile(currentNumber)
+			fmt.Println("Current number is", currentNumber)
 		case 2:
-			fmt.Println("hey")
+			fmt.Println("Current number is", currentNumber)
 		default:
+
+			fmt.Println("Cya!")
 			return
 		}
 	}

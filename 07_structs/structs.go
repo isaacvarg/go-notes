@@ -1,8 +1,12 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"time"
+
+	// this is importing a custom struct pacakge
+	"example.com/structs/boardgame"
 )
 
 // so far as I can tell this is similar to type in Typescript
@@ -20,8 +24,52 @@ type user struct {
 // and the `user` adds this func to the user struct
 // so now we don't need to pass the arguments because this method
 // has access to the data of the struct it is apart of via the `u`
+// as written, the receiver argument works like other arguments in that
+// they make a copy in memory, so if we made a clear app user func
+// doing someting like u.firtName = "", it would be setting the copy `u`, not
+// the value stored in the struct, see mutating below
 func (u user) outputUserDetailsMethod() {
 	fmt.Println(u.firstName, u.lastName, u.birthdate)
+}
+
+// as stated above, to mutate you should use the pointer instead so the
+// original instance is mutated
+func (u *user) clearUserFirstName() {
+	u.firstName = ""
+}
+
+// constructors
+// this isn't necessarily a feature baked into go
+// like classes in other languages, but rather a convention
+// you typically see in go code in which the job of this (constructor)
+// function is to to create such a struct
+// convention is to name it `newStructName`
+// you can do the method we did below using struct literal notation still,
+// however, this is common convention
+// also note that you can use a pointer for a constructor because this is
+// really making a copy, however, for this amount of data, it is not necessary
+// see newUserWithPointer below
+func newUser(firstName, lastName, birthdate string) user {
+	return user{
+		firstName: firstName,
+		lastName:  lastName,
+		birthdate: birthdate,
+		createdAt: time.Now(),
+	}
+}
+
+// constructor with pointer and validation
+func newUserWithPointer(firstName, lastName, birthdate string) (*user, error) {
+	if firstName == "" || lastName == "" || birthdate == "" {
+		return nil, errors.New("Can't be blank")
+	}
+
+	return &user{
+		firstName: firstName,
+		lastName:  lastName,
+		birthdate: birthdate,
+		createdAt: time.Now(),
+	}, nil
 }
 
 func main() {
@@ -43,6 +91,20 @@ func main() {
 		birthdate: userBirthdate,
 		createdAt: time.Now(),
 	}
+
+	// using the constructor
+	appUserFromCon := newUser(userFirstName, userLastName, userBirthdate)
+	fmt.Println("App User from Constructor", appUserFromCon)
+
+	// using constructor with pointer + validation
+	var appUserFromConPointer *user
+	appUserFromConPointer, err := newUserWithPointer(userFirstName, userLastName, userBirthdate)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	fmt.Println("App user form constructor with pointer:", appUserFromConPointer)
 
 	// if you are adding the values in the order of the struct
 	// you can ommit the keyword
@@ -70,6 +132,13 @@ func main() {
 
 	// now using the method instead, we don't need to pass argunments
 	appUser.outputUserDetailsMethod()
+	appUser.clearUserFirstName()
+	appUser.outputUserDetailsMethod()
+
+	// this is an example of splitting the struct in its own package
+	var game *boardgame.Boardgame
+	game, _ = boardgame.NewBoardgame("Dominion", 100)
+	fmt.Println(game)
 }
 
 // now let's actually use the struct
@@ -94,9 +163,8 @@ func altOutputUserDetails(appUser *user) {
 func getUserData(promptText string) string {
 	fmt.Print(promptText)
 	var value string
-	_, err := fmt.Scan(&value)
-	if err != nil {
-		fmt.Println(err)
-	}
+	// scanln ends the scan when enter is pressed
+	fmt.Scanln(&value)
+
 	return value
 }

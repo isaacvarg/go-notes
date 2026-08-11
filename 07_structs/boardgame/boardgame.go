@@ -22,6 +22,13 @@ type Boardgame struct {
 // !! struct embedding
 // a struct has no inheritance or classes
 // however, you can still build a struct type that builds on another struct
+type Expansion struct {
+	standalone bool
+	// this is the embedd
+	Boardgame
+	// you can name the embedd and refer to it in other parts by the name, e.g.:
+	// bg Boardgame
+}
 
 func NewBoardgame(name string, plays int) (*Boardgame, error) {
 	if name == "" {
@@ -32,4 +39,14 @@ func NewBoardgame(name string, plays int) (*Boardgame, error) {
 		name:  name,
 		plays: plays,
 	}, nil
+}
+
+func NewExpansion(standalone bool) Expansion {
+	return Expansion{
+		standalone: false,
+		User: User{
+			name: "",
+			plays: 0
+		}
+	}
 }
